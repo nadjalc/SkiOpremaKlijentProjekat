@@ -187,20 +187,32 @@ public class FrmRezervacijePrikaz extends javax.swing.JFrame {
                 RezervacijaSkija rez = (RezervacijaSkija) listaRezervacija.get(tblRezervacije.getSelectedRow());
                 List<StavkaRezervacijeSkija> stavke = rez.getListaStavki();
                 if (!stavke.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, "Ne mozete obrisati rezervaciju dok ne obrisete skije tj stavke za tu rezervaciju!");
                     int result = JOptionPane.showConfirmDialog(this, "Da li zelite da obrisete sve stavke rezervacije?", "Potvrda", JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
                         for (StavkaRezervacijeSkija stavkaRezervacijeSkija : stavke) {
-                            Kontroler.getInstance().obrisiStavkuRezervacije(stavkaRezervacijeSkija);
+                            System.out.println(stavke.size() + "44444444444444");
+                            int proslo = Kontroler.getInstance().obrisiStavkuRezervacije(stavkaRezervacijeSkija);
+                            if (proslo == 1) {
+                                System.out.println("USLO U IF");
+                                stavke.remove(stavkaRezervacijeSkija);
+                                System.out.println("IZBRISALO IZ LISTE");
+                            }
                         }
-                    }else{
+
+                    } else {
                         return;
                     }
+
                 }
+                rez.setListaStavki(stavke);
+                System.out.println(rez.getListaStavki().size() + "Da li je lista stavki praznaaa?????");
                 List<AbstractObject> listaPosleBris = Kontroler.getInstance().obrisiRezervaciju(rez);
                 ModelRezervacija mpr = (ModelRezervacija) tblRezervacije.getModel();
                 mpr.setListaRezervacija(listaPosleBris);
                 mpr.fireTableDataChanged();
                 JOptionPane.showMessageDialog(rootPane, "Sistem je uspesno obrisao rezervaciju", "Brisanje rezervacije", JOptionPane.INFORMATION_MESSAGE);
+
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(FrmRezervacijePrikaz.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {

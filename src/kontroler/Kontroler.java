@@ -77,7 +77,7 @@ public class Kontroler {
         Korisnik korisnik = new Korisnik(null, username, password, null, null, true);
         kt.setParametar(korisnik);
         Komunikacija.getInstance().posaljiZahtev(kt);
-        st = Komunikacija.getInstance().procitajOdgovor();  
+        st = Komunikacija.getInstance().procitajOdgovor();
         if (st.getUspesnost() == 1) {
             return (AbstractObject) st.getPodaci();
         } else {
@@ -214,18 +214,25 @@ public class Kontroler {
     }
 
     public void izlogujKorisnika(Korisnik korisnik) {
-        kt= new KlijentTransfer();
+        kt = new KlijentTransfer();
         kt.setOperacija(Konstante.IZLOGUJ_KORISNIKA);
         kt.setParametar(korisnik);
         Komunikacija.getInstance().posaljiZahtev(kt);
-        
+
     }
 
-    public void obrisiStavkuRezervacije(StavkaRezervacijeSkija stavkaRezervacijeSkija) {
+    public int obrisiStavkuRezervacije(StavkaRezervacijeSkija stavkaRezervacijeSkija) throws Exception {
         kt = new KlijentTransfer();
         kt.setOperacija(Konstante.OBRISI_STAVKU_REZERVACIJE);
         kt.setParametar(stavkaRezervacijeSkija);
         Komunikacija.getInstance().posaljiZahtev(kt);
+        st = Komunikacija.getInstance().procitajOdgovor();
+        if (st.getUspesnost() == 1) {
+            return (int) st.getPodaci();
+        } else {
+            Exception exec = st.getException();
+            throw exec;
+        }
     }
 
 }
