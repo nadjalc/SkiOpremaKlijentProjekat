@@ -45,7 +45,7 @@ public class ModelRezervacijaTabelaStavki extends AbstractTableModel {
             case 0:
                 return s.getRedniBrojStavke();
             case 1:
-                return s.getParSkija();
+                return s.getParSkija().getParSkijaID();
             case 2:
                 return s.getParSkija().getDuzina();
             case 3:
@@ -84,6 +84,7 @@ public class ModelRezervacijaTabelaStavki extends AbstractTableModel {
 
     public void setListaStavki(List<StavkaRezervacijeSkija> listaStavki) {
         this.listaStavki = listaStavki;
+        fireTableDataChanged();
     }
 
     public void dodajNovuStavku() {

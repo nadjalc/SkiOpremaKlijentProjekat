@@ -9,6 +9,7 @@ import domen.AbstractObject;
 import domen.Korisnik;
 import domen.ParSkija;
 import domen.RezervacijaSkija;
+import domen.StavkaRezervacijeSkija;
 import domen.TipSkija;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -218,6 +219,13 @@ public class Kontroler {
         kt.setParametar(korisnik);
         Komunikacija.getInstance().posaljiZahtev(kt);
         
+    }
+
+    public void obrisiStavkuRezervacije(StavkaRezervacijeSkija stavkaRezervacijeSkija) {
+        kt = new KlijentTransfer();
+        kt.setOperacija(Konstante.OBRISI_STAVKU_REZERVACIJE);
+        kt.setParametar(stavkaRezervacijeSkija);
+        Komunikacija.getInstance().posaljiZahtev(kt);
     }
 
 }

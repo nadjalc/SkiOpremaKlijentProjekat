@@ -7,6 +7,7 @@ package forme;
 
 import domen.AbstractObject;
 import domen.RezervacijaSkija;
+import domen.StavkaRezervacijeSkija;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -168,6 +169,7 @@ public class FrmRezervacijePrikaz extends javax.swing.JFrame {
             if (listaRezervacija.size() == 0) {
                 JOptionPane.showMessageDialog(this, "Sistem ne moze da nadje rezervaciju!", "GRESKA!", JOptionPane.ERROR_MESSAGE);
             }
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrmRezervacijePrikaz.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -183,6 +185,17 @@ public class FrmRezervacijePrikaz extends javax.swing.JFrame {
 
             try {
                 RezervacijaSkija rez = (RezervacijaSkija) listaRezervacija.get(tblRezervacije.getSelectedRow());
+                List<StavkaRezervacijeSkija> stavke = rez.getListaStavki();
+                if (!stavke.isEmpty()) {
+                    int result = JOptionPane.showConfirmDialog(this, "Da li zelite da obrisete sve stavke rezervacije?", "Potvrda", JOptionPane.YES_NO_OPTION);
+                    if (result == JOptionPane.YES_OPTION) {
+                        for (StavkaRezervacijeSkija stavkaRezervacijeSkija : stavke) {
+                            Kontroler.getInstance().obrisiStavkuRezervacije(stavkaRezervacijeSkija);
+                        }
+                    }else{
+                        return;
+                    }
+                }
                 List<AbstractObject> listaPosleBris = Kontroler.getInstance().obrisiRezervaciju(rez);
                 ModelRezervacija mpr = (ModelRezervacija) tblRezervacije.getModel();
                 mpr.setListaRezervacija(listaPosleBris);

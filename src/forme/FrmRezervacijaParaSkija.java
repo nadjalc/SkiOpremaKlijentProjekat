@@ -35,6 +35,7 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
     JFrame parent;
     List<AbstractObject> listaDostupnihParovaSkija;
     JComboBox tipS;
+
     public void setParent(JFrame parent) {
         this.parent = parent;
     }
@@ -218,6 +219,12 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
     private void SacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SacuvajActionPerformed
         try {
             // TODO add your handling code here:
+            ModelRezervacijaTabelaStavki m = (ModelRezervacijaTabelaStavki) tblStavke.getModel();
+            List<StavkaRezervacijeSkija> stavke = m.getListaStavki();
+            if (stavke.isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, "Ne mozete sacuvati trenutnu rezervaciju ako nema makar jedan par skija za stavku!");
+                return;
+            }
             String id = txtId.getText().trim();
             String dat = txtDatum.getText().trim();
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -280,7 +287,7 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-     
+
     }//GEN-LAST:event_formWindowClosing
 
     /**
@@ -338,8 +345,13 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
 
     private void srediFormu() {
         try {
+            if (mode.equals("izmeni")) {
+                Sacuvaj.setText("Izmeni rezervaciju");
+            } else {
+                Sacuvaj.setText("Sacuvaj rezervaciju");
+            }
             List<AbstractObject> listaSkijasa = Kontroler.getInstance().vratiListuSkijasa();
-            jComboBox1.setModel( new DefaultComboBoxModel(listaSkijasa.toArray()));
+            jComboBox1.setModel(new DefaultComboBoxModel(listaSkijasa.toArray()));
             listaDostupnihParovaSkija = Kontroler.getInstance().vratiListuParovaSkija();
             tipS = new JComboBox(listaDostupnihParovaSkija.toArray());
 
@@ -377,8 +389,7 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
         for (StavkaRezervacijeSkija stavkaRezervacijeSkija : rezervacijaSkija.getListaStavki()) {
             listaDostupnihParovaSkija.remove(stavkaRezervacijeSkija.getParSkija());
         }
-    }
 
-   
+    }
 
 }
