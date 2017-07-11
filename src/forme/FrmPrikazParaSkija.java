@@ -185,6 +185,7 @@ public class FrmPrikazParaSkija extends javax.swing.JFrame {
                 List<AbstractObject> listaRez = Kontroler.getInstance().pretraziRezervacije(ps.getParSkijaID());
                 ModelRezervacija mod = new ModelRezervacija(listaRez);
                 tblrezervacija.setModel(mod);
+                tblrezervacija.setEnabled(true);
             } catch (Exception ex) {
                 Logger.getLogger(FrmPrikazParaSkija.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -282,6 +283,11 @@ public class FrmPrikazParaSkija extends javax.swing.JFrame {
         tblrezervacija.setEnabled(false);
         btnDetalji.setEnabled(true);
         btnIZmeni.setEnabled(false);
+    }
+
+    void refresujTabelu() {
+       Model m = (Model) tblParoviSkija.getModel();
+       m.osveziTabelu();
     }
 
 }

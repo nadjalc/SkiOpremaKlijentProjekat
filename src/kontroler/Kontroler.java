@@ -13,6 +13,7 @@ import domen.TipSkija;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import komunikacija.Komunikacija;
 import konstante.Konstante;
 import transfer.KlijentTransfer;
@@ -175,13 +176,48 @@ public class Kontroler {
         kt.setOperacija(Konstante.PRETRAZI_REZERVACIJE);
         kt.setParametar(pretraga);
         Komunikacija.getInstance().posaljiZahtev(kt);
-        ServerTransfer st = Komunikacija.getInstance().procitajOdgovor();
+        st = Komunikacija.getInstance().procitajOdgovor();
         if (st.getUspesnost() == 1) {
             return (List<AbstractObject>) st.getPodaci();
         } else {
             Exception exec = st.getException();
             throw exec;
         }
+    }
+
+    public List<AbstractObject> ucitajListuRezervacija() throws Exception {
+        KlijentTransfer kt = new KlijentTransfer();
+        kt.setOperacija(Konstante.UCITAJ_LISTU_REZERVACIJA);
+        Komunikacija.getInstance().posaljiZahtev(kt);
+        st = Komunikacija.getInstance().procitajOdgovor();
+        if (st.getUspesnost() == 1) {
+            return (List<AbstractObject>) st.getPodaci();
+        } else {
+            Exception exec = st.getException();
+            throw exec;
+        }
+    }
+
+    public List<AbstractObject> obrisiRezervaciju(RezervacijaSkija rez) throws Exception {
+        kt = new KlijentTransfer();
+        kt.setOperacija(Konstante.OBRISI_REZERVACIJU_VOZNJE);
+        kt.setParametar(rez);
+        Komunikacija.getInstance().posaljiZahtev(kt);
+        st = Komunikacija.getInstance().procitajOdgovor();
+        if (st.getUspesnost() == 1) {
+            return (List<AbstractObject>) st.getPodaci();
+        } else {
+            Exception exec = st.getException();
+            throw exec;
+        }
+    }
+
+    public void izlogujKorisnika(Korisnik korisnik) {
+        kt= new KlijentTransfer();
+        kt.setOperacija(Konstante.IZLOGUJ_KORISNIKA);
+        kt.setParametar(korisnik);
+        Komunikacija.getInstance().posaljiZahtev(kt);
+        
     }
 
 }

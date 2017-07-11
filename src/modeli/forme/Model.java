@@ -9,6 +9,8 @@ import domen.AbstractObject;
 import domen.ParSkija;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 import kolekcije.KolekcijaSkija;
 import kontroler.Kontroler;
@@ -84,6 +86,15 @@ public class Model extends AbstractTableModel {
 
     public List<AbstractObject> getListaParova() {
         return listaParova;
+    }
+
+    public void osveziTabelu() {
+        try {
+            listaParova = Kontroler.getInstance().vratiListuParovaSkija();
+            fireTableDataChanged();
+        } catch (Exception ex) {
+            Logger.getLogger(Model.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 

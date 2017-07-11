@@ -281,9 +281,9 @@ public class FrmUnosParaSkija extends javax.swing.JDialog {
 
                 String idNovi = ps.getParSkijaID();
 
-
                 if (mode.equals("izmene")) {
                     JOptionPane.showMessageDialog(rootPane, "Par skija je uspesno Izmenjen: " + idNovi);
+                    pf.refresujTabelu();
 
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "Par skija je uspesno sacuvan: " + idNovi);
@@ -291,6 +291,7 @@ public class FrmUnosParaSkija extends javax.swing.JDialog {
                 }
                 txtID.setText(idNovi);
                 this.dispose();
+
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 JOptionPane.showMessageDialog(rootPane, "Par skija nije sacuvan doslo je do greske", "GRESKA!", JOptionPane.ERROR_MESSAGE);
@@ -389,6 +390,8 @@ public class FrmUnosParaSkija extends javax.swing.JDialog {
             novi.setParent(pf.getParent());
             pf.dispose();
             novi.setVisible(true);
+            novi.refresujTabelu();
+
         }
         dispose();
     }

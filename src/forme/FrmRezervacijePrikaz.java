@@ -6,8 +6,14 @@
 package forme;
 
 import domen.AbstractObject;
+import domen.RezervacijaSkija;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import kontroler.Kontroler;
+import modeli.forme.ModelRezervacija;
 
 /**
  *
@@ -44,15 +50,25 @@ public class FrmRezervacijePrikaz extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblRezervacije = new javax.swing.JTable();
         btnIzmeni = new javax.swing.JButton();
         btnObrisi = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jButton1.setText("Pretrazi");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblRezervacije.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -63,11 +79,21 @@ public class FrmRezervacijePrikaz extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblRezervacije);
 
         btnIzmeni.setText("Izmeni");
+        btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIzmeniActionPerformed(evt);
+            }
+        });
 
         btnObrisi.setText("Obrisi");
+        btnObrisi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnObrisiActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -109,6 +135,68 @@ public class FrmRezervacijePrikaz extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
+        // TODO add your handling code here:
+        if (tblRezervacije.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(parent, "Odaberite rezervaciju!");
+        } else {
+            RezervacijaSkija rez = (RezervacijaSkija) listaRezervacija.get(tblRezervacije.getSelectedRow());
+            FrmRezervacijaParaSkija fmr = new FrmRezervacijaParaSkija(rez);
+            fmr.setParent(this);
+            //this.setVisible(false);
+            fmr.setVisible(true);
+        }
+    }//GEN-LAST:event_btnIzmeniActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosing
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            String pretraga = jTextField1.getText();
+            if (pretraga.isEmpty()) {
+                listaRezervacija = Kontroler.getInstance().ucitajListuRezervacija();
+            } else {
+                listaRezervacija = Kontroler.getInstance().pretraziRezervacije(pretraga);
+            }
+            ModelRezervacija mpr = (ModelRezervacija) tblRezervacije.getModel();
+            mpr.setListaRezervacija(listaRezervacija);
+            mpr.fireTableDataChanged();
+            if (listaRezervacija.size() == 0) {
+                JOptionPane.showMessageDialog(this, "Sistem ne moze da nadje rezervaciju!", "GRESKA!", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrmRezervacijePrikaz.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(FrmRezervacijePrikaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnObrisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiActionPerformed
+        // TODO add your handling code here:
+        if (tblRezervacije.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(parent, "Odaberite rezervaciju!");
+        } else {
+
+            try {
+                RezervacijaSkija rez = (RezervacijaSkija) listaRezervacija.get(tblRezervacije.getSelectedRow());
+                List<AbstractObject> listaPosleBris = Kontroler.getInstance().obrisiRezervaciju(rez);
+                ModelRezervacija mpr = (ModelRezervacija) tblRezervacije.getModel();
+                mpr.setListaRezervacija(listaPosleBris);
+                mpr.fireTableDataChanged();
+                JOptionPane.showMessageDialog(rootPane, "Sistem je uspesno obrisao rezervaciju", "Brisanje rezervacije", JOptionPane.INFORMATION_MESSAGE);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FrmRezervacijePrikaz.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(rootPane, "Sistem ne moze da obrise rezervaciju!", "GRESKA", JOptionPane.ERROR_MESSAGE);
+            }
+
+        }
+    }//GEN-LAST:event_btnObrisiActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -149,11 +237,17 @@ public class FrmRezervacijePrikaz extends javax.swing.JFrame {
     private javax.swing.JButton btnObrisi;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable tblRezervacije;
     // End of variables declaration//GEN-END:variables
 
     private void srediFormu() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            listaRezervacija = Kontroler.getInstance().ucitajListuRezervacija();
+            ModelRezervacija m = new ModelRezervacija(listaRezervacija);
+            tblRezervacije.setModel(m);
+        } catch (Exception ex) {
+            Logger.getLogger(FrmRezervacijePrikaz.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -280,14 +280,7 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        if (mode.equals("edit") && (parent instanceof FrmRezervacijePrikaz)) {
-            FrmRezervacijePrikaz stara = (FrmRezervacijePrikaz) parent;
-            FrmRezervacijePrikaz nova = new FrmRezervacijePrikaz();
-            nova.setParent(stara.parent);
-            nova.setVisible(true);
-        } else {
-            parent.setVisible(true);
-        }
+     
     }//GEN-LAST:event_formWindowClosing
 
     /**
@@ -352,7 +345,7 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
 
             model = new ModelRezervacijaTabelaStavki(new ArrayList<StavkaRezervacijeSkija>());
             tblStavke.setModel(model);
-            tblStavke.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(tipS));
+            tblStavke.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(tipS));
             tblStavke.setColumnSelectionAllowed(true);
 
         } catch (Exception ex) {
@@ -385,5 +378,7 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
             listaDostupnihParovaSkija.remove(stavkaRezervacijeSkija.getParSkija());
         }
     }
+
+   
 
 }

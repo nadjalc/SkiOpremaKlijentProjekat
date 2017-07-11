@@ -50,7 +50,7 @@ public class ModelRezervacija extends AbstractTableModel {
             case 2:
                 return s.isUplataUnapred() ? "Da" : "Ne";
             case 3:
-                return s.getSkijas().getIme() + " "+s.getSkijas().getPrezime();
+                return s.getSkijas();
             default:
                 return "N/A";
         }
@@ -74,6 +74,7 @@ public class ModelRezervacija extends AbstractTableModel {
         this.listaRezervacija = listaRezervacija;
     }
 
+ 
    
     
     

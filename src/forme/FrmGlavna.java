@@ -8,18 +8,8 @@ package forme;
 import domen.Korisnik;
 import forme.FrmPrikazParaSkija;
 import forme.FrmUnosParaSkija;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import komunikacija.Komunikacija;
@@ -69,9 +59,16 @@ public class FrmGlavna extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        izlogujSe = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Iznajmljivanje Skijaške opreme");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         panelLogin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 51)));
         panelLogin.setToolTipText("");
@@ -193,6 +190,18 @@ public class FrmGlavna extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
+        jMenu3.setText("Korisnik");
+
+        izlogujSe.setText("Izloguj se");
+        izlogujSe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                izlogujSeActionPerformed(evt);
+            }
+        });
+        jMenu3.add(izlogujSe);
+
+        jMenuBar1.add(jMenu3);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -282,6 +291,17 @@ public class FrmGlavna extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPasswordActionPerformed
 
+    private void izlogujSeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_izlogujSeActionPerformed
+        // TODO add your handling code here:
+        // Kontroler.getInstance().izlogujKorisnika(korisnik);
+        System.exit(0);
+    }//GEN-LAST:event_izlogujSeActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        // Kontroler.getInstance().izlogujKorisnika(korisnik);
+    }//GEN-LAST:event_formWindowClosed
+
     /**
      * @param args the command line arguments
      */
@@ -322,8 +342,10 @@ public class FrmGlavna extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogIn;
+    private javax.swing.JMenuItem izlogujSe;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
@@ -352,6 +374,8 @@ public class FrmGlavna extends javax.swing.JFrame {
     private void predjiNaFormuZaRad() {
         jMenuBar1.setVisible(true);
         panelLogin.setVisible(false);
+        jMenu3.setText(korisnik.getKorisnickoIme());
+
     }
 
 }
