@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -246,15 +247,23 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "Uspesno sacuvana rezervacija!");
 
             } else {
-                RezervacijaSkija izmenjena = new RezervacijaSkija(id, datum, uuplataUnapred, skijas, listaStavki);
-//                ArrayList<StavkaRezervacijeSkija> novaLista = new ArrayList<>();
+                listaStavki = model.getListaStavki();
+                LinkedList<StavkaRezervacijeSkija> testStavke = new LinkedList<>();
                 for (StavkaRezervacijeSkija stavkaRezervacijeSkija : listaStavki) {
+                    testStavke.add(stavkaRezervacijeSkija);
+                }
+                
+                RezervacijaSkija izmenjena = new RezervacijaSkija(id, datum, uuplataUnapred, skijas, testStavke);
+//                ArrayList<StavkaRezervacijeSkija> novaLista = new ArrayList<>();
+                for (StavkaRezervacijeSkija stavkaRezervacijeSkija : testStavke) {
                     stavkaRezervacijeSkija.setRezervacijaSkija(izmenjena);
 //                    novaLista.add(stavkaRezervacijeSkija);
                 }
 //                izmenjena.setListaStavki(novaLista);
+                System.out.println(testStavke);
                 RezervacijaSkija izBaze = Kontroler.getInstance().izmeniRezervaciju(izmenjena);
                 model.setListaStavki(izBaze.getListaStavki());
+                System.out.println(model.getListaStavki());
                 JOptionPane.showMessageDialog(rootPane, "Uspesno izmenjena rezervacija!");
 
             }
@@ -280,11 +289,12 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
                 for (StavkaRezervacijeSkija stavka : model.getListaStavki()) {
                     stavka.setRedniBrojStavke(i++);
                 }
+                model.fireTableDataChanged();
+
             } catch (Exception ex) {
                 Logger.getLogger(FrmRezervacijaParaSkija.class.getName()).log(Level.SEVERE, null, ex);
                 // neuspelo brisanje
             }
-            model.fireTableDataChanged();
         }
     }//GEN-LAST:event_btnUkloniActionPerformed
 
