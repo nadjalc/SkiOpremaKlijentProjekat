@@ -21,6 +21,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import komunikacija.Komunikacija;
 import kontroler.Kontroler;
 import modeli.forme.ModelRezervacijaTabelaStavki;
 
@@ -219,9 +220,10 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
     private void SacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SacuvajActionPerformed
         try {
             // TODO add your handling code here:
-            ModelRezervacijaTabelaStavki m = (ModelRezervacijaTabelaStavki) tblStavke.getModel();
-            List<StavkaRezervacijeSkija> stavke = m.getListaStavki();
-            if (stavke.isEmpty()) {
+//            ModelRezervacijaTabelaStavki m = (ModelRezervacijaTabelaStavki) tblStavke.getModel();
+//            List<StavkaRezervacijeSkija> stavke = m.getListaStavki();
+            List<StavkaRezervacijeSkija> listaStavki = model.getListaStavki();
+            if (listaStavki.isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, "Ne mozete sacuvati trenutnu rezervaciju ako nema makar jedan par skija za stavku!");
                 return;
             }
@@ -231,7 +233,6 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
             Date datum = sdf.parse(dat);
             boolean uuplataUnapred = jRadioButton1.isSelected();
             Skijas skijas = (Skijas) jComboBox1.getSelectedItem();
-            List<StavkaRezervacijeSkija> listaStavki = model.getListaStavki();
             for (StavkaRezervacijeSkija stavkaRezervacijeSkija : listaStavki) {
                 if (stavkaRezervacijeSkija.getParSkija().getMarka().equals("")) {
                     throw new Exception("Svaka stavka mora imati par skija!");
@@ -246,13 +247,14 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
 
             } else {
                 RezervacijaSkija izmenjena = new RezervacijaSkija(id, datum, uuplataUnapred, skijas, listaStavki);
-                ArrayList<StavkaRezervacijeSkija> novaLista = new ArrayList<>();
+//                ArrayList<StavkaRezervacijeSkija> novaLista = new ArrayList<>();
                 for (StavkaRezervacijeSkija stavkaRezervacijeSkija : listaStavki) {
                     stavkaRezervacijeSkija.setRezervacijaSkija(izmenjena);
-                    novaLista.add(stavkaRezervacijeSkija);
+//                    novaLista.add(stavkaRezervacijeSkija);
                 }
-                izmenjena.setListaStavki(novaLista);
+//                izmenjena.setListaStavki(novaLista);
                 RezervacijaSkija izBaze = Kontroler.getInstance().izmeniRezervaciju(izmenjena);
+                model.setListaStavki(izBaze.getListaStavki());
                 JOptionPane.showMessageDialog(rootPane, "Uspesno izmenjena rezervacija!");
 
             }
@@ -270,10 +272,17 @@ public class FrmRezervacijaParaSkija extends javax.swing.JFrame {
         if (tblStavke.getSelectedRow() == -1) {
             JOptionPane.showMessageDialog(parent, "Molim vas odaberite stavku!");
         } else {
-            model.getListaStavki().remove(tblStavke.getSelectedRow());
-            int i = 1;
-            for (StavkaRezervacijeSkija stavka : model.getListaStavki()) {
-                stavka.setRedniBrojStavke(i++);
+            StavkaRezervacijeSkija zaRemove = model.getListaStavki().get(tblStavke.getSelectedRow());
+            try {
+                Kontroler.getInstance().obrisiStavkuRezervacije(zaRemove);
+                model.getListaStavki().remove(tblStavke.getSelectedRow());
+                int i = 1;
+                for (StavkaRezervacijeSkija stavka : model.getListaStavki()) {
+                    stavka.setRedniBrojStavke(i++);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(FrmRezervacijaParaSkija.class.getName()).log(Level.SEVERE, null, ex);
+                // neuspelo brisanje
             }
             model.fireTableDataChanged();
         }
